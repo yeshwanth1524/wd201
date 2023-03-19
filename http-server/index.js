@@ -50,4 +50,4 @@ http
         break;
     }
   })
-  .listen(port, () => {});
+  .listen(port);
