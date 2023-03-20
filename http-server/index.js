@@ -1,53 +1,51 @@
 const http = require("http");
 const fs = require("fs");
+const args = process.argv.slice(2);
+const portIndex = args.findIndex((arg) => arg === "--port");
 
-let ContentOfHome = "";
-let ContentOfProject = "";
-let ContentOfRegistration = "";
+let contentOfHome = "";
+let contentOfProject = "";
+let contentOfRegistration = "";
 
 fs.readFile("home.html", (err, home) => {
   if (err) {
     throw err;
   }
-  ContentOfHome = home;
+  contentOfHome = home;
 });
 
 fs.readFile("project.html", (err, project) => {
   if (err) {
     throw err;
   }
-  ContentOfProject = project;
+  contentOfProject = project;
 });
 
 fs.readFile("registration.html", (err, registration) => {
   if (err) {
     throw err;
   }
-  ContentOfRegistration = registration;
+  contentOfRegistration = registration;
 });
-
-const args = process.argv.slice(2);
-const portIndex = args.findIndex((arg) => arg === "--port");
 
 const port = portIndex !== -1 ? args[portIndex + 1] : 3000;
 
-http
-  .createServer((request, response) => {
+const server = http.createServer((request, response) => {
     let url = request.url;
     response.writeHeader(200, { "Content-Type": "text/html" });
     switch (url) {
-      case "/project":
-        response.write(ContentOfProject);
+      case "./project.html":
+        response.write(contentOfProject);
         response.end();
         break;
-      case "/registration":
-        response.write(ContentOfRegistration);
+      case "./registration.html":
+        response.write(contentOfRegistration);
         response.end();
         break;
       default:
-        response.write(ContentOfHome);
+        response.write(contentOfHome);
         response.end();
         break;
     }
   })
-  .listen(port);
+server.listen(port);
